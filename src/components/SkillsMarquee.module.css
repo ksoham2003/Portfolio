@@ -1,0 +1,72 @@
+.marqueeWrapper {
+  width: 100%;
+  margin: 40px 0;
+}
+
+.marqueeTitle {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.marqueeContainer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.01);
+  padding: 20px 0;
+}
+
+.marqueeContent {
+  display: flex;
+  animation: scroll 60s linear infinite;
+  width: fit-content;
+  gap: 0;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marqueeContainer:hover .marqueeContent {
+  animation-play-state: paused;
+}
+
+.skillItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  white-space: nowrap;
+  font-family: var(--font-syne), sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.skillText {
+  color: var(--foreground);
+  transition: all 0.3s ease;
+}
+
+.skillItem:hover .skillText {
+  color: var(--accent-green);
+  text-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
+}
+
+.dot {
+  color: var(--accent-green);
+  font-size: 12px;
+}

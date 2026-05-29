@@ -7,6 +7,8 @@ import SpotlightCard from "@/components/SpotlightCard";
 import ScrollReveal from "@/components/ScrollReveal";
 import ProjectDrawer, { ProjectData } from "@/components/ProjectDrawer";
 import ScrambleLink from "@/components/ScrambleLink";
+import ParallaxImage from "@/components/ParallaxImage";
+import SkillsMarquee from "@/components/SkillsMarquee";
 
 const PROJECTS: ProjectData[] = [
   {
@@ -162,13 +164,15 @@ export default function Home() {
 
           {/* Large Hero Portrait Image */}
           <ScrollReveal animation="fade" delay={4} className="featured-media-container" data-cursor-label="HI SOHAM">
-            <Image
-              src="/developer_portrait.png"
-              alt="Soham - Full Stack Developer"
-              fill
-              className="featured-media-image"
-              priority
-            />
+            <ParallaxImage speed={2.5}>
+              <Image
+                src="/developer_portrait.png"
+                alt="Soham - Full Stack Developer"
+                fill
+                className="featured-media-image"
+                priority
+              />
+            </ParallaxImage>
           </ScrollReveal>
         </section>
 
@@ -324,54 +328,31 @@ export default function Home() {
 
           <div className="about-grid">
             <ScrollReveal animation="up">
-              <div>
-                <h2 className="about-intro-title">
-                  MORE ABOUT SOHAM<span className="accent-color">©</span>
-                </h2>
-                <p className="about-intro-text">
-                  I am a passionate software engineer specializing in building high-fidelity web interfaces and robust, scalable backend infrastructures.
-                  <br /><br />
-                  Over the past several years, I have worked with modern web standards, focusing on rendering performance, state optimization, and clean architectural design patterns to deliver user experiences that feel fluid, responsive, and alive.
-                </p>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
+                <div>
+                  <h2 className="about-intro-title">
+                    MORE ABOUT SOHAM<span className="accent-color">©</span>
+                  </h2>
+                  <p className="about-intro-text">
+                    I am a passionate software engineer specializing in building high-fidelity web interfaces and robust, scalable backend infrastructures.
+                    <br /><br />
+                    Over the past several years, I have worked with modern web standards, focusing on rendering performance, state optimization, and clean architectural design patterns to deliver user experiences that feel fluid, responsive, and alive.
+                  </p>
+                </div>
+                <a href="/resume.pdf" className="contact-btn" style={{ width: 'fit-content' }} data-cursor-label="DOWNLOAD">
+                  Download Resume
+                </a>
               </div>
             </ScrollReveal>
-
-            <div>
-              {/* Core Technologies */}
-              <ScrollReveal animation="up" delay={1} className="skills-wrapper">
-                <h3 className="skills-title">Core Languages &amp; Frameworks <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>(Click to filter projects)</span></h3>
-                <div className="skills-grid">
-                  {["React", "Next.js", "TypeScript", "Node.js", "Express", "Python"].map((sk) => (
-                    <span 
-                      key={sk}
-                      className={`skill-pill ${selectedSkill === sk ? 'active' : ''}`}
-                      // onClick={() => toggleSkill(sk)}
-                      data-cursor-label={selectedSkill === sk ? 'RESET' : 'FILTER'}
-                    >
-                      {sk}
-                    </span>
-                  ))}
-                </div>
-              </ScrollReveal>
-
-              {/* Data & Infrastructure */}
-              <ScrollReveal animation="up" delay={2} className="skills-wrapper">
-                <h3 className="skills-title">Database &amp; Infrastructure <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>(Click to filter projects)</span></h3>
-                <div className="skills-grid">
-                  {["PostgreSQL", "MongoDB", "Redis", "GraphQL", "Docker", "Git / GitHub"].map((sk) => (
-                    <span 
-                      key={sk}
-                      className={`skill-pill ${selectedSkill === sk ? 'active' : ''}`}
-                      // onClick={() => toggleSkill(sk)}
-                      data-cursor-label={selectedSkill === sk ? 'RESET' : 'FILTER'}
-                    >
-                      {sk}
-                    </span>
-                  ))}
-                </div>
-              </ScrollReveal>
-            </div>
           </div>
+
+          {/* Skills Marquee */}
+          <ScrollReveal animation="up" delay={1} style={{ marginTop: '60px' }}>
+            <SkillsMarquee 
+              skills={["React", "Next.js", "TypeScript", "Node.js", "Express", "Python", "PostgreSQL", "MongoDB", "Redis", "GraphQL", "Docker", "Git / GitHub"]}
+              title="EXPERTISE &amp; SKILLS"
+            />
+          </ScrollReveal>
         </section>
       </main>
 
