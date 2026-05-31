@@ -102,6 +102,12 @@ p {
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transform: translateY(0);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-hidden {
+  transform: translateY(-110%);
 }
 
 /* Clock styles */
@@ -1161,7 +1167,7 @@ p {
 .menu-link {
   position: relative;
   font-family: var(--font-syne), sans-serif;
-  font-size: clamp(2.5rem, 7.5vw, 6.5rem);
+  font-size: clamp(2.5rem, 5.5vw, 6.5rem);
   font-weight: 800;
   text-transform: uppercase;
   text-decoration: none;

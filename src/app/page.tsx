@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Clock from "@/components/Clock";
 import SpotlightCard from "@/components/SpotlightCard";
@@ -96,6 +96,23 @@ export default function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeService, setActiveService] = useState<string | null>(null);
+  const [headerHidden, setHeaderHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  // Hide header on scroll down, show on scroll up
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY > 80 && currentY > lastScrollY.current) {
+        setHeaderHidden(true);
+      } else {
+        setHeaderHidden(false);
+      }
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleService = (serviceId: string) => {
     setActiveService(prev => (prev === serviceId ? null : serviceId));
@@ -135,7 +152,7 @@ export default function Home() {
   return (
     <div>
       {/* HEADER NAVBAR */}
-      <header className="header">
+      <header className={`header${headerHidden ? ' header-hidden' : ''}`}>
         <Clock />
         
         <div 
