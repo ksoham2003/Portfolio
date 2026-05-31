@@ -14,6 +14,7 @@ interface ScrollRevealProps {
   delay?: number;
   className?: string;
   style?: React.CSSProperties;
+  toggleActions?: string;
 }
 
 export default function ScrollReveal({
@@ -22,6 +23,7 @@ export default function ScrollReveal({
   delay = 0,
   className = '',
   style = {},
+  toggleActions = 'play reverse play reverse',
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -48,14 +50,14 @@ export default function ScrollReveal({
           scrollTrigger: {
             trigger: el,
             start: 'top 90%',
-            toggleActions: 'play none none none',
+            toggleActions: toggleActions,
           },
         }
       );
     }, ref);
 
     return () => ctx.revert(); // clean up GSAP context
-  }, [animation, delay]);
+  }, [animation, delay, toggleActions]);
 
   return (
     <div ref={ref} style={style} className={className}>

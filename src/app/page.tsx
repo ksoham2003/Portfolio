@@ -5,6 +5,7 @@ import Image from "next/image";
 import Clock from "@/components/Clock";
 import SpotlightCard from "@/components/SpotlightCard";
 import ScrollReveal from "@/components/ScrollReveal";
+import LineSplitReveal from "@/components/LineSplitReveal";
 import ProjectDrawer, { ProjectData } from "@/components/ProjectDrawer";
 import ScrambleLink from "@/components/ScrambleLink";
 import ParallaxImage from "@/components/ParallaxImage";
@@ -53,11 +54,53 @@ const PROJECTS: ProjectData[] = [
   }
 ];
 
+interface ServiceData {
+  id: string;
+  title: string;
+  subtitle: string;
+  dotsCount: number;
+  description: string;
+  deliverables: string[];
+}
+
+const SERVICES: ServiceData[] = [
+  {
+    id: "frontend-development",
+    title: "Frontend Development",
+    subtitle: "RESPONSIVE UI, INTERACTION DESIGN",
+    dotsCount: 1,
+    description: "Crafting high-fidelity, responsive, and accessible user interfaces. Implementing fluid micro-animations, state optimizations, and modular frontend components using React, Next.js, and GSAP.",
+    deliverables: ["Next.js Application Architecture", "Responsive Styling & Micro-interactions", "SEO & Core Web Vitals Optimization", "Accessible UI components (WCAG AAA)"]
+  },
+  {
+    id: "backend-engineering",
+    title: "Backend Engineering",
+    subtitle: "SECURE APIS, DATABASE DESIGN",
+    dotsCount: 2,
+    description: "Designing robust and scalable server logic. Implementing RESTful and GraphQL APIs, database architecture, data validation pipelines, user authentication systems, and distributed caching structures.",
+    deliverables: ["RESTful & GraphQL API Development", "PostgreSQL & MongoDB Database Design", "Token Authentication & Encryption", "Caching Layers & Query Optimization"]
+  },
+  {
+    id: "full-stack-systems",
+    title: "Full Stack Systems",
+    subtitle: "END-TO-END DEPLOYMENT, SCALABILITY",
+    dotsCount: 3,
+    description: "Bridging the gap between server logic and client interfaces. Configuring automated CI/CD deployment pipelines, containerized environments, and high-performance real-time telemetry streaming.",
+    deliverables: ["Docker & Containerization Setup", "CI/CD Pipeline Configurations", "Real-Time WebSocket Streams", "Monorepo & Microservices Layout"]
+  }
+];
+
 export default function Home() {
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeService, setActiveService] = useState<string | null>(null);
+
+  const toggleService = (serviceId: string) => {
+    setActiveService(prev => (prev === serviceId ? null : serviceId));
+  };
+
 
   const toggleSkill = (skill: string) => {
     if (selectedSkill === skill) {
@@ -117,11 +160,10 @@ export default function Home() {
       <main>
         {/* HERO SECTION */}
         <section className="hero">
-          <ScrollReveal animation="fade">
-            <h1 className="hero-main-title">
-              SOHAM<span className="accent-color terminal-blink">_</span>
-            </h1>
-          </ScrollReveal>
+          <LineSplitReveal as="h1" className="hero-main-title" yPercent={120} stagger={0.12} duration={1.2} start="top 95%">
+            SOHAM
+            {/* SOHAM<span className="accent-color terminal-blink">_</span> */}
+          </LineSplitReveal>
 
           <div className="hero-info-grid">
             {/* Location */}
@@ -186,11 +228,9 @@ export default function Home() {
             </div>
           </ScrollReveal>
 
-          <ScrollReveal animation="up">
-            <h2 className="section-title">
-              I BUILD SLEEK <span className="accent-color">HIGH-PERFORMANCE</span> WEB EXPERIENCES.
-            </h2>
-          </ScrollReveal>
+          <LineSplitReveal as="h2" className="section-title" stagger={0.1} duration={1}>
+            I BUILD SLEEK <span className="accent-color">HIGH-PERFORMANCE</span> WEB EXPERIENCES.
+          </LineSplitReveal>
 
           <div className="grid-3">
             <ScrollReveal animation="up" delay={1} style={{ height: "100%" }}>
@@ -242,16 +282,12 @@ export default function Home() {
           </ScrollReveal>
 
           <div className="grid-2" style={{ alignItems: "flex-end", marginBottom: "40px" }}>
-            <ScrollReveal animation="up">
-              <h2 className="section-title" style={{ marginBottom: 0 }}>
-                LATEST <span className="accent-color">PORTFOLIO</span>
-              </h2>
-            </ScrollReveal>
-            <ScrollReveal animation="up" delay={1}>
-              <p style={{ maxWidth: "420px", fontSize: "15px", lineHeight: "1.6" }}>
-                My creative spirit comes alive in the digital realm. I combine design precision with technical engineering to craft premium web applications.
-              </p>
-            </ScrollReveal>
+            <LineSplitReveal as="h2" className="section-title" style={{ marginBottom: 0 }} stagger={0.1} duration={1}>
+              LATEST <span className="accent-color">PORTFOLIO</span>
+            </LineSplitReveal>
+            <LineSplitReveal as="p" style={{ maxWidth: "420px", fontSize: "15px", lineHeight: "1.6" }} stagger={0.06} duration={0.8}>
+              My creative spirit comes alive in the digital realm. I combine design precision with technical engineering to craft premium web applications.
+            </LineSplitReveal>
           </div>
 
           {selectedSkill && (
@@ -278,7 +314,7 @@ export default function Home() {
                   delay={idx + 1}
                   style={{ height: '100%' }}
                 >
-                  <SpotlightCard 
+                  <div 
                     className={`project-card ${isHighlighted ? 'highlighted' : ''}`}
                     onClick={() => openProject(proj)}
                     data-cursor-label="OPEN"
@@ -290,60 +326,144 @@ export default function Home() {
                         fill
                         className="project-img"
                       />
+                      
                     </div>
                     <div className="project-info">
+                      <div className="project-dots">
+                        {proj.slides.map((_, i) => (
+                          <span key={i} className={`project-dot${i === 0 ? ' active' : ''}`} />
+                        ))}
+                      </div>
                       <div className="project-name-wrapper">
                         <h3 className="project-name">{proj.title}</h3>
-                        <div className="project-tags">
-                          {proj.tags.map((tag) => (
-                            <span key={tag} className="project-tag">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
+                        <span className="project-category">{proj.tags[0]}</span>
                       </div>
-                      <div className="project-link-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="7" y1="17" x2="17" y2="7"/>
-                          <polyline points="7 7 17 7 17 17"/>
+                      <div className="project-arrow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="5" y1="12" x2="19" y2="12"/>
+                          <polyline points="12 5 19 12 12 19"/>
                         </svg>
                       </div>
                     </div>
-                  </SpotlightCard>
+                  </div>
                 </ScrollReveal>
               );
             })}
           </div>
         </section>
 
-        {/* SECTION 03: ABOUT */}
-        <section id="about" className="section-wrapper">
+        {/* SECTION 03: SERVICES */}
+        <section id="services" className="section-wrapper">
           <ScrollReveal animation="fade">
             <div className="section-meta">
               <span>03</span>
+              <span className="section-label">//SERVICES</span>
+              <span>PRO SERVICES</span>
+            </div>
+          </ScrollReveal>
+
+          <div className="services-layout-grid">
+            <div className="services-left">
+              <LineSplitReveal as="h2" className="services-main-title" stagger={0.08} duration={1}>
+                PRO<br />SERVICES
+              </LineSplitReveal>
+            </div>
+            
+            <div className="services-right">
+              <div className="services-desc-wrapper">
+                <p className="services-desc">
+                  Discover our range of services designed to elevate your brand to next level.
+                </p>
+              </div>
+
+              <div className="services-accordion">
+                {SERVICES.map((service) => {
+                  const isExpanded = activeService === service.id;
+                  return (
+                    <div key={service.id} className="service-accordion-item">
+                      <button 
+                        className="service-accordion-header"
+                        onClick={() => toggleService(service.id)}
+                      >
+                        <div className="service-header-left">
+                          {/* 5 dots progress indicator */}
+                          <div className="service-dots-indicator">
+                            {Array.from({ length: 5 }).map((_, idx) => (
+                              <span 
+                                key={idx} 
+                                className={`service-dot ${idx < service.dotsCount ? 'active' : ''}`}
+                              />
+                            ))}
+                          </div>
+                          
+                          <div className="service-info-text">
+                            <h3 className="service-title">{service.title}</h3>
+                            <span className="service-subtitle">{service.subtitle}</span>
+                          </div>
+                        </div>
+
+                        <div className={`service-chevron ${isExpanded ? 'expanded' : ''}`}>
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                          </svg>
+                        </div>
+                      </button>
+
+                      <div className={`service-accordion-content ${isExpanded ? 'expanded' : ''}`}>
+                        <div className="service-accordion-inner">
+                          <div className="service-details-container">
+                            <p className="service-details-text">{service.description}</p>
+                            
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                              <h4 className="service-deliverables-title">Key Deliverables</h4>
+                              <ul className="service-deliverables-list">
+                                {service.deliverables.map((item, idx) => (
+                                  <li key={idx} className="service-deliverable-item">
+                                    {item}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 04: ABOUT */}
+        <section id="about" className="section-wrapper">
+          <ScrollReveal animation="fade">
+            <div className="section-meta">
+              <span>04</span>
               <span className="section-label">//WHO AM I</span>
               <span>SINCE 2018</span>
             </div>
           </ScrollReveal>
 
           <div className="about-grid">
-            <ScrollReveal animation="up">
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
-                <div>
-                  <h2 className="about-intro-title">
-                    MORE ABOUT SOHAM<span className="accent-color">©</span>
-                  </h2>
-                  <p className="about-intro-text">
-                    I am a passionate software engineer specializing in building high-fidelity web interfaces and robust, scalable backend infrastructures.
-                    <br /><br />
-                    Over the past several years, I have worked with modern web standards, focusing on rendering performance, state optimization, and clean architectural design patterns to deliver user experiences that feel fluid, responsive, and alive.
-                  </p>
-                </div>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
+              <div>
+                <LineSplitReveal as="h2" className="about-intro-title" stagger={0.1} duration={1}>
+                  MORE ABOUT SOHAM<span className="accent-color">©</span>
+                </LineSplitReveal>
+                <LineSplitReveal as="p" className="about-intro-text" stagger={0.05} duration={0.8}>
+                  I am a passionate software engineer specializing in building high-fidelity web interfaces and robust, scalable backend infrastructures.
+                </LineSplitReveal>
+                <LineSplitReveal as="p" className="about-intro-text" stagger={0.05} duration={0.8}>
+                  Over the past several years, I have worked with modern web standards, focusing on rendering performance, state optimization, and clean architectural design patterns to deliver user experiences that feel fluid, responsive, and alive.
+                </LineSplitReveal>
+              </div>
+              <ScrollReveal animation="up" delay={2}>
                 <a href="/resume.pdf" className="contact-btn" style={{ width: 'fit-content' }} data-cursor-label="DOWNLOAD">
                   Download Resume
                 </a>
-              </div>
-            </ScrollReveal>
+              </ScrollReveal>
+            </div>
           </div>
 
           {/* Skills Marquee */}
@@ -358,14 +478,12 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer id="contact" className="footer">
-        <ScrollReveal animation="fade">
-          <h2 className="footer-logo">SOHAM<span className="accent-color">.</span></h2>
-        </ScrollReveal>
-        <ScrollReveal animation="up" delay={1}>
-          <p className="footer-contact-desc">
-            Have an interesting project or position in mind? Let's build something exceptional together.
-          </p>
-        </ScrollReveal>
+        <LineSplitReveal as="h2" className="footer-logo" yPercent={120} stagger={0.12} duration={1.2}>
+          SOHAM<span className="accent-color">.</span>
+        </LineSplitReveal>
+        <LineSplitReveal as="p" className="footer-contact-desc" stagger={0.06} duration={0.8}>
+          Have an interesting project or position in mind? Let&apos;s build something exceptional together.
+        </LineSplitReveal>
         <ScrollReveal animation="up" delay={2} className="footer-btn-wrapper">
           <a href="mailto:soham@example.com" className="contact-btn" style={{ padding: "14px 36px" }} data-cursor-label="EMAIL">
             Get In Touch
@@ -411,6 +529,7 @@ export default function Home() {
               <ScrambleLink href="#top" className="active-item" onClick={() => setMenuOpen(false)} text="HOME" />
               <ScrambleLink href="#approach" onClick={() => setMenuOpen(false)} text="APPROACH" />
               <ScrambleLink href="#portfolio" onClick={() => setMenuOpen(false)} text="WORK" />
+              <ScrambleLink href="#services" onClick={() => setMenuOpen(false)} text="SERVICES" />
               <ScrambleLink href="#about" onClick={() => setMenuOpen(false)} text="ABOUT" />
               <ScrambleLink href="#contact" onClick={() => setMenuOpen(false)} text="CONTACT" />
             </nav>

@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from 'react';
 
 export default function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isProjectHover, setIsProjectHover] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const requestRef = useRef<number | null>(null);
   const mouseRef = useRef({ x: -100, y: -100 });
@@ -18,6 +20,16 @@ export default function CustomCursor() {
 
     const onMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
+
+      const target = e.target as HTMLElement;
+
+      setIsProjectHover(
+        !!target.closest('.project-img-wrapper')
+      );
+
+      setIsHovered(
+        !!target.closest('a, button, .logo-matrix, .project-card, .phase-card, .skill-pill, .service-accordion-header, .footer-bottom span')
+      );
     };
 
     window.addEventListener('mousemove', onMouseMove);
@@ -54,10 +66,9 @@ export default function CustomCursor() {
   return (
     <div
       ref={dotRef}
-      className="custom-cursor-dot"
-      style={{
-        transform: `translate3d(-100px, -100px, 0) translate(-50%, -50%)`,
-      }}
-    />
+      className={`custom-cursor ${isProjectHover ? 'view-mode' : ''} ${isHovered && !isProjectHover ? 'hovering' : ''}`}
+    >
+      {isProjectHover && <span>VIEW</span>}
+    </div>
   );
 }
