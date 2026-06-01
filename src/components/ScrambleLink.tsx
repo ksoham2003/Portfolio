@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!<>-_\\/[]{}—=+*^?#________';
 
@@ -17,7 +18,7 @@ export default function ScrambleLink({ href, text, onClick, className = '' }: Sc
 
   useEffect(() => {
     let iteration = 0;
-    
+
     intervalRef.current = setInterval(() => {
       setDisplayText(text
         .split('')
@@ -29,7 +30,7 @@ export default function ScrambleLink({ href, text, onClick, className = '' }: Sc
         })
         .join('')
       );
-      
+
       if (iteration >= text.length) {
         if (intervalRef.current) clearInterval(intervalRef.current);
       }
@@ -41,13 +42,28 @@ export default function ScrambleLink({ href, text, onClick, className = '' }: Sc
     };
   }, [text]);
 
+  // External / hash links use a plain anchor; internal page routes use Next.js Link
+  const isExternal = href.startsWith('http') || href.startsWith('#');
+
+  if (isExternal) {
+    return (
+      <a
+        href={href}
+        className={`menu-link ${className}`}
+        onClick={onClick}
+      >
+        {displayText || text}
+      </a>
+    );
+  }
+
   return (
-    <a 
-      href={href} 
-      className={`menu-link ${className}`} 
+    <Link
+      href={href}
+      className={`menu-link ${className}`}
       onClick={onClick}
     >
       {displayText || text}
-    </a>
+    </Link>
   );
 }
